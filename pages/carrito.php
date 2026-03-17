@@ -204,8 +204,14 @@ if (isset($_GET['success'])) {
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var publishableKey = <?php echo json_encode(STRIPE_PUBLISHABLE_KEY); ?>;
+            if (!publishableKey) {
+                var el = document.getElementById('card-element');
+                if (el) el.closest('.form-group') && (el.closest('.form-group').innerHTML = '<p class="error">Pago con tarjeta no configurado. Configure STRIPE_PUBLISHABLE_KEY en .env</p>');
+                return;
+            }
             // 1. INICIALIZACIÓN DE STRIPE
-            const stripe = Stripe('<?php echo STRIPE_PUBLISHABLE_KEY; ?>');
+            const stripe = Stripe(publishableKey);
             const elements = stripe.elements();
 
             const style = { /* ... (Estilos de Stripe) ... */ };
