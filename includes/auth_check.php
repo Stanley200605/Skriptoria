@@ -14,10 +14,10 @@ if (session_status() == PHP_SESSION_NONE) {
 // 1. Verificar si la sesión está activa
 if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
     
-    // Si NO está logueado, redirigir al index (página pública)
-    // Se puede añadir un mensaje de error si se desea: index.php?error=acceso_denegado
-    header("Location: index.php?error=sesion_requerida");
-    // header("Location: ../index.php"); 
+    // Redirigir al index en la raíz del sitio (funciona desde /pages/, /actions/ o raíz)
+    $is_in_subdir = (strpos($_SERVER['SCRIPT_NAME'], '/pages/') !== false || strpos($_SERVER['SCRIPT_NAME'], '/actions/') !== false);
+    $index_url = $is_in_subdir ? '../index.php' : 'index.php';
+    header("Location: " . $index_url . "?error=sesion_requerida");
     exit;
 }
 
