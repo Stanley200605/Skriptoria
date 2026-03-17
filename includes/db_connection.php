@@ -9,17 +9,26 @@
  *
  * NOTA: Esta librería de conexión utiliza mysqli y se recomienda incluirla (require_once)
  * al inicio de cualquier script PHP que necesite interactuar con la BD.
+ * Valores leídos desde .env (véase .env.example).
  */
+
+require_once __DIR__ . '/load_env.php';
+
+// Read from .env: getenv() can be empty under Apache; $_ENV is set by Dotenv
+$env = function ($key, $default = '') {
+    $v = getenv($key);
+    if ($v !== false && $v !== '') return $v;
+    return $_ENV[$key] ?? $default;
+};
 
 // ----------------------------------------------------
 // 1. Configuración de la Base de Datos
 // ----------------------------------------------------
 
-// Define las constantes de conexión. Es una buena práctica usar constantes (DEFINE).
-define('DB_SERVER', 'localhost'); // Servidor de la BD (comúnmente localhost en desarrollo)
-define('DB_USERNAME', 'root');    // Usuario de la BD (cambiar en producción)
-define('DB_PASSWORD', '');        // Contraseña de la BD (cambiar en producción)
-define('DB_NAME', 'skriptoria_db'); // Nombre de la BD que creamos con SQL
+define('DB_SERVER',   $env('DB_SERVER',   'localhost'));
+define('DB_USERNAME', $env('DB_USERNAME', 'root'));
+define('DB_PASSWORD', $env('DB_PASSWORD', ''));
+define('DB_NAME',     $env('DB_NAME',     'skriptoria_db'));
 
 // ----------------------------------------------------
 // 2. Establecer la Conexión
